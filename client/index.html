@@ -5,11 +5,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <title>Twitter Update</title>
 </head>
+<div class="container">
+    <div class="col-sm-6 col-sm-offset-3">
+        <!-- <form class="" action="/update" method="post"> -->
+        <div class="form-group">
+            <label>Apa yang sedang kamu rasakan hari ini ?</label>
+            <textarea id="status" class="form-control" type="textarea"></textarea>
+        </div>
+        <button class="btn btn-info btn-lg col-sm-offset-4" onclick="createStatus()" type="submit" name="button">Update</button>
+        <!-- </form> -->
+        <br><br>
+    </div>
+
+    <div class="col-sm-6 col-sm-offset-3">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="liststatus">
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <body>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $.ajax({
+                url: "http://localhost:3000/home",
+                type: "GET",
+                success: function(result) {
+                    var tampung = "";
+                    for (var i = 0; i < result.length; i++) {
+                        tampung += `<tr><td>${result[i].text}</td></tr>`
+                    }
+                    $("#liststatus").append(tampung)
+                }
+            });
+        })
 
+        function createStatus() {
+            $(document).ready(function() {
+                $.ajax({
+                    url: "http://localhost:3000/update",
+                    type: "POST",
+                    data: {
+                      dataStatus: $("#status").val()
+                    },
+                    success: function(result) {
+                        $("#liststatus").append(`<tr><td>${result.text}</td></tr>`)
+                        $("#status").val('')
+                    }
+                });
+            })
+        }
+    </script>
 </body>
 
 </html>
